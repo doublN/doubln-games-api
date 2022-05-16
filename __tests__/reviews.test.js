@@ -138,11 +138,23 @@ describe("PATCH /api/reviews/:review_id", () =>{
         }
 
         return request(app)
-        .patch("/api/reviews/twentytwo")
+        .patch("/api/reviews/2")
         .send(updateObj)
         .expect(400)
         .then(({body}) =>{
             expect(body.msg).toEqual("Bad request: invalid data type")
+        })
+    })
+
+    test("status: 400 respond with an error message for missing inc_votes key", () =>{
+        const updateObj = {};
+
+        return request(app)
+        .patch("/api/reviews/2")
+        .send(updateObj)
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: missing update property");
         })
     })
 })

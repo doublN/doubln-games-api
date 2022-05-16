@@ -17,7 +17,6 @@ exports.patchReview = (req, res, next) =>{
     updateReview(req, inc_votes).then((review) =>{
         res.status(200).send({review});
     }).catch((err) =>{
-        console.log(err);
         next(err);
     })
 }

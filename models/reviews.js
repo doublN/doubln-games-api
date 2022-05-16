@@ -13,6 +13,11 @@ exports.selectReview = (req) =>{
 }
 
 exports.updateReview = (req, inc_votes) =>{
+
+    if(!inc_votes){
+        return Promise.reject({status : 400, msg : "Bad request: missing update property"})
+    }
+
     return db.query(
         `UPDATE reviews
         SET votes = votes + $1
