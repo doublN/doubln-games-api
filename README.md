@@ -1,3 +1,3 @@
 ## Project Setup
 
-Please create a .env.development file and add `PGDATABASE=nc_games` to it, and a .env.test files and add `PGDATABASE=nc_games_test` to be able to connect to the development and test databases.
+Please create a .env.development file and assign the development database to the `PGDATABASE` variable, and a .env.test file and assign the test database to the `PGDATABASE` variable to be able to connect to the development and test databases.
