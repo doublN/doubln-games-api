@@ -6,13 +6,16 @@ const {
 
 const {
     getReview,
+    patchReview,
 } = require("./controllers/reviews")
 
 const app = express();
+app.use(express.json());
 
 app.get("/api/categories", getCategories);
 
 app.get("/api/reviews/:review_id", getReview);
+app.patch("/api/reviews/:review_id", patchReview);
 
 //called if route is not found
 app.use("/*", (req, res, next) =>{
@@ -23,7 +26,7 @@ app.use("/*", (req, res, next) =>{
 //psql errors
 app.use((err, req, res, next) =>{
     if(err.code === '22P02'){
-        res.status(400).send({msg : "Bad request: invalid id"})
+        res.status(400).send({msg : "Bad request: invalid data type"})
     } else{
         next(err);
     }
