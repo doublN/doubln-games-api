@@ -11,7 +11,7 @@ beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
 describe("GET /api/reviews/:review_id", () =>{
-    test.only("status: 200 responds with a review object containing the appropriate properties based on the review id passed in", () =>{
+    test("status: 200 responds with a review object containing the appropriate properties based on the review id passed in", () =>{
         return request(app)
         .get("/api/reviews/1")
         .expect(200)
