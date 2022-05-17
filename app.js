@@ -1,3 +1,4 @@
+const { application } = require("express");
 const express = require ("express");
 
 const {
@@ -5,7 +6,7 @@ const {
 } = require("./controllers/categories");
 
 const {
-    getReview,
+    getReviews,
     patchReview,
 } = require("./controllers/reviews")
 
@@ -18,7 +19,8 @@ app.use(express.json());
 
 app.get("/api/categories", getCategories);
 
-app.get("/api/reviews/:review_id", getReview);
+
+app.get("/api/reviews/:review_id", getReviews);
 app.patch("/api/reviews/:review_id", patchReview);
 
 app.get("/api/users", getUsers);

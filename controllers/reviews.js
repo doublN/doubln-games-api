@@ -1,10 +1,10 @@
 const {
-    selectReview,
+    selectReviews,
     updateReview,
 } = require("../models/reviews")
 
-exports.getReview = (req, res, next) =>{
-    selectReview(req).then((review) =>{
+exports.getReviews = (req, res, next) =>{
+    selectReviews(req).then((review) =>{
         res.status(200).send({review});
     }).catch((err) =>{
         next(err);

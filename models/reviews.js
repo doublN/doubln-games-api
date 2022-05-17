@@ -1,6 +1,6 @@
 const db = require("../db/connection");
 
-exports.selectReview = (req) =>{
+exports.selectReviews = (req) =>{
     return db.query(`
     SELECT reviews.*, COUNT(reviews.review_id)::INT AS comment_count
     FROM reviews
@@ -9,11 +9,6 @@ exports.selectReview = (req) =>{
     GROUP BY reviews.review_id`, [req.params.review_id]).then((review) =>{
         return Promise.all([selectJustReview(req), review])
     }).then(([reviewForId, reviewWithComments]) =>{
-        //if there isn't a review for that id
-        if(reviewForId.length === 0){
-            return Promise.reject({status: 404, msg: "Review id does not exist"})
-        }
-
         //There is a review for that id, but no comments
         if(reviewWithComments.rows.length === 0){
             return {comment_count : 0, ...reviewForId[0]}
