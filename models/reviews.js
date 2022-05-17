@@ -2,23 +2,21 @@ const db = require("../db/connection");
 
 exports.selectReview = (req) =>{
     return db.query(`
-    SELECT reviews.review_id, reviews.title, reviews.review_body, reviews.designer, reviews.review_img_url, reviews.votes, reviews.category, reviews.owner, reviews.created_at, COUNT(reviews.review_id)::INT AS comment_count
+    SELECT reviews.*, COUNT(reviews.review_id)::INT AS comment_count
     FROM reviews
     JOIN comments ON reviews.review_id = comments.review_id
     WHERE reviews.review_id = $1
     GROUP BY reviews.review_id`, [req.params.review_id]).then((review) =>{
-        return Promise.all(
-            [db.query(`SELECT * FROM reviews where review_id = $1`, [req.params.review_id]), review])
+        return Promise.all([selectJustReview(req), review])
     }).then(([reviewForId, reviewWithComments]) =>{
-
         //if there isn't a review for that id
-        if(reviewForId.rows.length === 0){
+        if(reviewForId.length === 0){
             return Promise.reject({status: 404, msg: "Review id does not exist"})
         }
 
         //There is a review for that id, but no comments
         if(reviewWithComments.rows.length === 0){
-            return {comment_count : 0, ...reviewForId.rows[0]}
+            return {comment_count : 0, ...reviewForId[0]}
         } else{
             return reviewWithComments.rows[0];
         }
@@ -41,4 +39,14 @@ exports.updateReview = (req, inc_votes) =>{
                 return review.rows[0];
             }
         })
+}
+
+function selectJustReview (req){
+    return db.query(`SELECT * FROM reviews WHERE review_id = $1`, [req.params.review_id]).then((review) =>{
+        if(review.rows.length === 0){
+            return Promise.reject({status: 404, msg: "Review id does not exist"})
+        } else {
+            return review.rows;
+        }
+    })
 }
