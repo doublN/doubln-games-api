@@ -1,4 +1,3 @@
-const { send } = require("express/lib/response")
 const {
     selectUsers,
 } = require("../models/users")
