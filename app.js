@@ -8,11 +8,17 @@ const {
     getReview,
 } = require("./controllers/reviews")
 
+const {
+    getUsers,
+} = require("./controllers/users")
+
 const app = express();
 
 app.get("/api/categories", getCategories);
 
 app.get("/api/reviews/:review_id", getReview);
+
+app.get("/api/users", getUsers);
 
 //called if route is not found
 app.use("/*", (req, res, next) =>{
@@ -37,7 +43,6 @@ app.use((err, req, res, next) =>{
 
 //catch all error message
 app.use((err, req, res, next) =>{
-    console.log(err);
     res.status(500).send({msg : "Internal server error"})
 })
 
