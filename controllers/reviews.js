@@ -5,8 +5,7 @@ const {
     updateReview,
 } = require("../models/reviews")
 
-//***DELETE NEXT IF NOT NEEDED */
-exports.getReviews = (req, res, next) =>{
+exports.getReviews = (req, res) =>{
     selectReviews().then((reviews) =>{
         res.status(200).send({reviews})
     })
