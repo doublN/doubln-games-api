@@ -18,7 +18,7 @@ exports.selectReviewById = (req) =>{
     JOIN comments ON reviews.review_id = comments.review_id
     WHERE reviews.review_id = $1
     GROUP BY reviews.review_id`, [req.params.review_id]).then((review) =>{
-        return Promise.all([selectJustReview(req), review])
+        return Promise.all([selectReviewById(req), review])
     }).then(([reviewForId, reviewWithComments]) =>{
         //There is a review for that id, but no comments
         if(reviewWithComments.rows.length === 0){
@@ -47,7 +47,7 @@ exports.updateReview = (req, inc_votes) =>{
         })
 }
 
-function selectJustReview (req){
+exports.selectReviewById = (req) =>{
     return db.query(`SELECT * FROM reviews WHERE review_id = $1`, [req.params.review_id]).then((review) =>{
         if(review.rows.length === 0){
             return Promise.reject({status: 404, msg: "Review id does not exist"})

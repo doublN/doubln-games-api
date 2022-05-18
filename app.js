@@ -15,16 +15,26 @@ const {
     getUsers,
 } = require("./controllers/users")
 
+const { 
+    getCommentsByReviewId 
+} = require("./controllers/comments");
+
 const app = express();
 app.use(express.json());
 
+//Categories
 app.get("/api/categories", getCategories);
 
+//Reviews
 app.get("/api/reviews", getReviews)
 app.get("/api/reviews/:review_id", getReviewById);
 app.patch("/api/reviews/:review_id", patchReview);
 
+//Users
 app.get("/api/users", getUsers);
+
+//Comments
+app.get("/api/reviews/:review_id/comments", getCommentsByReviewId)
 
 //called if route is not found
 app.use("/*", (req, res, next) =>{
