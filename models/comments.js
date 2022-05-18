@@ -1,12 +1,12 @@
 const db = require("../db/connection")
-const {selectReviewById} = require("./reviews")
+const {selectJustReview} = require("./reviews")
 
 exports.selectCommentsByReviewId = (req) =>{
     return db.query(
         `SELECT * FROM comments
         WHERE comments.review_id = $1`, [req.params.review_id]).then((comments) =>{
             //Check the review_id exists, comments result from query
-            return Promise.all([selectReviewById(req), comments])
+            return Promise.all([selectJustReview(req), comments])
         }).then(([review, comments]) =>{
             //the review_id does exist
             if(comments.rows.length === 0){
@@ -16,5 +16,14 @@ exports.selectCommentsByReviewId = (req) =>{
                 //return comments
                 return comments.rows;
             }
+        })
+}
+
+exports.addCommentByReviewId = (req) =>{
+    return db.query(
+        `INSERT INTO comments(author, body, review_id)
+        VALUES($1, $2, $3)
+        RETURNING *`,[req.body.username, req.body.body, req.params.review_id]).then((comment) =>{
+            return comment.rows[0];
         })
 }

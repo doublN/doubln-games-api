@@ -58,3 +58,77 @@ describe("GET /api/reviews/:review_id/comments", () =>{
         })
     })
 })
+
+describe("POST /api/reviews/:review_id/comments", () =>{
+    test("status: 201 adds comment object to comments table and responds with the posted comment", () =>{
+        const commentObj = {
+            username : "mallionaire",
+            body : "Fantastic!"
+        }
+
+        return request(app)
+        .post("/api/reviews/3/comments")
+        .send(commentObj)
+        .expect(201)
+        .then(({body : {comment}}) =>{
+            expect(comment).toMatchObject({
+                comment_id : 7,
+                body : "Fantastic!",
+                review_id : 3, 
+                author : "mallionaire",
+                votes : 0,
+            })
+
+            //check date up to the second
+            const dateNow = new Date(Date.now());
+            const commentDate = new Date(comment.created_at);
+
+            dateNow.setMilliseconds(0);
+            commentDate.setMilliseconds(0);
+
+            expect(commentDate).toEqual(dateNow);
+        })
+    })
+
+    test("status: 404 review_id does not exist", () =>{
+        const commentObj = {
+            username : "mallionaire",
+            body : "Fantastic!"
+        }
+
+        return request(app)
+        .post("/api/reviews/9999/comments")
+        .send(commentObj)
+        .expect(404)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: invalid data")
+        })
+    })
+
+    test("status: 400 when passed an object with missing keys" , ()=>{
+        const commentObj = {}
+
+        return request(app)
+        .post("/api/reviews/3/comments")
+        .send(commentObj)
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: missing data")
+        })
+    })
+
+    test("status: 404 when passed an object with a user that doesn't exist" , ()=>{
+        const commentObj = {
+            username : "doubl_n",
+            body : "Fantastic!"
+        }
+
+        return request(app)
+        .post("/api/reviews/3/comments")
+        .send(commentObj)
+        .expect(404)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: invalid data")
+        })
+    })
+})

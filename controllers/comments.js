@@ -1,5 +1,6 @@
 const {
-    selectCommentsByReviewId
+    selectCommentsByReviewId, 
+    addCommentByReviewId,
 } = require("../models/comments")
 
 exports.getCommentsByReviewId = (req, res, next) =>{
@@ -8,4 +9,12 @@ exports.getCommentsByReviewId = (req, res, next) =>{
     }).catch((err) =>{
         next(err);
     });
+}
+
+exports.postCommentByReviewId = (req, res, next) =>{
+    addCommentByReviewId(req).then((comment) =>{
+        res.status(201).send({comment});
+    }).catch((err) =>{
+        next(err);
+    })
 }
