@@ -3,6 +3,7 @@ const app = require("../app");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const testData = require("../db/data/test-data");
+require("jest-sorted");
 
 //seed the test data
 beforeEach(() => seed(testData));
@@ -178,6 +179,31 @@ describe("PATCH /api/reviews/:review_id", () =>{
         .expect(400)
         .then(({body}) =>{
             expect(body.msg).toEqual("Bad request: missing update property");
+        })
+    })
+})
+
+describe("GET /api/reviews", () =>{
+    test("status 200: responds with an array of review object in descending order by date", () =>{
+        return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.reviews).toBeInstanceOf(Array);
+            expect(body.reviews).toHaveLength(13);
+            expect(body.reviews).toBeSortedBy("created_at", {descending : true});
+            body.reviews.forEach((review) =>{
+                expect(review).toMatchObject({
+                    owner : expect.any(String),
+                    title : expect.any(String),
+                    review_id : expect.any(Number),
+                    category : expect.any(String),
+                    review_img_url : expect.any(String),
+                    created_at : expect.any(String),
+                    votes : expect.any(Number),
+                    comment_count : expect.any(Number)
+                })
+            })
         })
     })
 })
