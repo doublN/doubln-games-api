@@ -305,7 +305,16 @@ describe("GET /api/reviews", () =>{
         .get("/api/reviews?category=NotACategory")
         .expect(404)
         .then(({body}) =>{
-            expect(body.msg).toEqual("Invalid query")
+            expect(body.msg).toEqual("Invalid request")
+        })
+    })
+
+    test("status 200: responds with an empty array when a category passed exists but has no games associated", () =>{
+        return request(app)
+        .get("/api/reviews?category=children's games")
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.reviews).toEqual([]);
         })
     })
 })

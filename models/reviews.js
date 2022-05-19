@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const {checkCategoryExsists} = require("./categories")
 
 exports.selectReviews = (sort_by='created_at', order='desc', category) =>{
     const queryVals = [];
@@ -30,9 +31,14 @@ exports.selectReviews = (sort_by='created_at', order='desc', category) =>{
     }
     
     return db.query(queryText, queryVals).then((reviews) =>{
-        if(reviews.rows.length === 0){
-            return Promise.reject({status : 404, msg : "Invalid query"})
+        const promiseArr = [reviews];
+
+        if(category){
+            promiseArr.push(checkCategoryExsists(category))
         }
+
+       return Promise.all(promiseArr);
+    }).then(([reviews, category]) =>{
         return reviews.rows;
     })
 }
