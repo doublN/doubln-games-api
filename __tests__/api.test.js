@@ -12,7 +12,7 @@ describe("GET /api", () =>{
         .get("/api")
         .expect(200)
         .then(({body}) =>{
-            Promise.all([fs.readFile("../endpoints.json", "utf-8"), body.endpoints]);
+            Promise.all([fs.readFile("./endpoints.json", "utf-8"), body.endpoints]);
         }).then((file, endpoints) =>{
             expect(endpoints).toEqual(file);
         })
