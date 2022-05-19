@@ -132,3 +132,54 @@ describe("POST /api/reviews/:review_id/comments", () =>{
         })
     })
 })
+
+describe("DELETE /api/comments/:comment_id", () =>{
+    test("status: 204 responds with no content upon successfully deleting comment", () =>{
+        return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then(({body}) =>{
+            expect(body).toEqual({});
+
+            return db.query(`SELECT * FROM comments`)
+        }).then((comments) =>{
+            expect(comments.rows).toHaveLength(5);
+            const expected = {comment_id : 1}
+            
+            comments.rows.forEach((comment) =>{
+                expect(comment).not.objectContaining(expected);
+            })
+        })
+    })
+
+    // .delete("/api/treasures/1")
+    //   .expect(204)
+    //   .then(() => {
+    //     return db.query(`SELECT * FROM treasures`);
+    //   })
+    //   .then((treasures) => {
+    //     expect(treasures.rows).toHaveLength(25);
+    //     treasures.rows.forEach((treasure) => {
+    //       const expected = { treasure_id: 1 };
+    //       expect.not.objectContaining(expected);
+    //     });
+    //   });
+
+    test("status: 404 when the comment_id doesn't exist", ()=>{
+        return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Comment id does not exist")
+        })
+    })
+
+    test.only("status: 400 when the passed comment_id is of incorrect type", () =>{
+        return request(app)
+        .delete("/api/comments/eleventy")
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: invalid data type")
+        })
+    })
+})
