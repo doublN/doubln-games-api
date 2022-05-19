@@ -207,7 +207,7 @@ describe("GET /api/reviews", () =>{
         })
     })
 
-    test("status 200: results sorted by title descending", () =>{
+    test("status 200: results sorted by title descending by default", () =>{
         return request(app)
         .get("/api/reviews?sort_by=title")
         .expect(200)
@@ -216,7 +216,7 @@ describe("GET /api/reviews", () =>{
         })
     })
 
-    test("status 200: results sorted by category descending", () =>{
+    test("status 200: results sorted by category descending by default", () =>{
         return request(app)
         .get("/api/reviews?sort_by=category")
         .expect(200)
@@ -225,43 +225,7 @@ describe("GET /api/reviews", () =>{
         })
     })
 
-    test("status 200: results sorted by designer descending", () =>{
-        return request(app)
-        .get("/api/reviews?sort_by=designer")
-        .expect(200)
-        .then(({body}) =>{
-            expect(body.reviews).toBeSortedBy("designer", {descending : true})
-        })
-    })
-
-    test("status 200: results sorted by owner descending", () =>{
-        return request(app)
-        .get("/api/reviews?sort_by=owner")
-        .expect(200)
-        .then(({body}) =>{
-            expect(body.reviews).toBeSortedBy("owner", {descending : true})
-        })
-    })
-
-    test("status 200: results sorted by votes descending", () =>{
-        return request(app)
-        .get("/api/reviews?sort_by=votes")
-        .expect(200)
-        .then(({body}) =>{
-            expect(body.reviews).toBeSortedBy("votes", {descending : true})
-        })
-    })
-
-    test("status 200: results sorted by comment_count descending", () =>{
-        return request(app)
-        .get("/api/reviews?sort_by=comment_count")
-        .expect(200)
-        .then(({body}) =>{
-            expect(body.reviews).toBeSortedBy("comment_count", {descending : true})
-        })
-    })
-
-    test("status 200: results arrive in ascending order", () =>{
+    test("status 200: results arrive in ascending order when passed order=asc in query", () =>{
         return request(app)
         .get("/api/reviews?order=asc")
         .expect(200)
