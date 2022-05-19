@@ -184,7 +184,7 @@ describe("PATCH /api/reviews/:review_id", () =>{
 })
 
 describe("GET /api/reviews", () =>{
-    test("status 200: responds with an array of review object in descending order by date", () =>{
+    test("status 200: responds with an array of review object in descending order by date by default", () =>{
         return request(app)
         .get("/api/reviews")
         .expect(200)
@@ -204,6 +204,81 @@ describe("GET /api/reviews", () =>{
                     comment_count : expect.any(Number)
                 })
             })
+        })
+    })
+
+    test("status 200: results sorted by title descending by default", () =>{
+        return request(app)
+        .get("/api/reviews?sort_by=title")
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.reviews).toBeSortedBy("title", {descending : true})
+        })
+    })
+
+    test("status 200: results sorted by category descending by default", () =>{
+        return request(app)
+        .get("/api/reviews?sort_by=category")
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.reviews).toBeSortedBy("category", {descending : true})
+        })
+    })
+
+    test("status 200: results arrive in ascending order when passed order=asc in query", () =>{
+        return request(app)
+        .get("/api/reviews?order=asc")
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.reviews).toBeSortedBy("created_at")
+        })
+    })
+
+    test("status 200: results filtered by a category", () =>{
+        return request(app)
+        .get("/api/reviews?category=social deduction")
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.reviews).toHaveLength(11);
+            body.reviews.forEach((review) =>{
+                expect(review.category).toEqual('social deduction');
+            })
+        })
+    })
+
+    test("status 400: when passed an invalid sort_by query", ()=>{
+        return request(app)
+        .get("/api/reviews?sort_by=melon")
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Invalid sort query")
+        })
+    })
+
+    test("status 400: when passed a invalid order_by query" ,() =>{
+        return request(app)
+        .get("/api/reviews?order=bananas")
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Invalid order query")
+        })
+    })
+
+    test("status 404: when passed a non-exsistant category", ()=>{
+        return request(app)
+        .get("/api/reviews?category=NotACategory")
+        .expect(404)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Invalid request")
+        })
+    })
+
+    test("status 200: responds with an empty array when a category passed exists but has no games associated", () =>{
+        return request(app)
+        .get("/api/reviews?category=children's games")
+        .expect(200)
+        .then(({body}) =>{
+            expect(body.reviews).toEqual([]);
         })
     })
 })

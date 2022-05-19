@@ -16,7 +16,8 @@ const {
 } = require("./controllers/users")
 
 const { 
-    getCommentsByReviewId 
+    getCommentsByReviewId,
+    postCommentByReviewId
 } = require("./controllers/comments");
 
 const app = express();
@@ -35,6 +36,7 @@ app.get("/api/users", getUsers);
 
 //Comments
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId)
+app.post("/api/reviews/:review_id/comments", postCommentByReviewId)
 
 //called if route is not found
 app.use("/*", (req, res, next) =>{
@@ -46,7 +48,11 @@ app.use("/*", (req, res, next) =>{
 app.use((err, req, res, next) =>{
     if(err.code === '22P02'){
         res.status(400).send({msg : "Bad request: invalid data type"})
-    } else{
+    } else if(err.code === '23503'){
+        res.status(404).send({msg : "Bad request: invalid data"})
+    }else if(err.code == '23502'){
+        res.status(400).send({msg : 'Bad request: missing data'})
+    }else{
         next(err);
     }
 })
