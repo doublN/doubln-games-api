@@ -17,7 +17,8 @@ const {
 
 const { 
     getCommentsByReviewId,
-    postCommentByReviewId
+    postCommentByReviewId,
+    deleteCommentByCommentId
 } = require("./controllers/comments");
 
 const app = express();
@@ -37,6 +38,7 @@ app.get("/api/users", getUsers);
 //Comments
 app.get("/api/reviews/:review_id/comments", getCommentsByReviewId)
 app.post("/api/reviews/:review_id/comments", postCommentByReviewId)
+app.delete("/api/comments/:comment_id", deleteCommentByCommentId)
 
 //called if route is not found
 app.use("/*", (req, res, next) =>{

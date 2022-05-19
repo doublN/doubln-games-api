@@ -132,3 +132,32 @@ describe("POST /api/reviews/:review_id/comments", () =>{
         })
     })
 })
+
+describe("DELETE /api/comments/:comment_id", () =>{
+    test("status: 204 responds with no content upon successfully deleting comment", () =>{
+        return request(app)
+        .delete("/api/comments/1")
+        .expect(204)
+        .then(({body}) =>{
+            expect(body).toEqual({});
+        })
+    })
+
+    test("status: 404 when the comment_id doesn't exist", ()=>{
+        return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Comment id does not exist")
+        })
+    })
+
+    test.only("status: 400 when the passed comment_id is of incorrect type", () =>{
+        return request(app)
+        .delete("/api/comments/eleventy")
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: invalid data type")
+        })
+    })
+})
