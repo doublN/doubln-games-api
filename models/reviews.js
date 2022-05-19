@@ -1,12 +1,38 @@
 const db = require("../db/connection");
 
-exports.selectReviews = () =>{
-    return db.query(`
-    SELECT reviews.*, COUNT(reviews.review_id)::INT AS comment_count
+exports.selectReviews = (sort_by='created_at', order='desc', category) =>{
+    const queryVals = [];
+
+    const validSortBy = ["title", "category", "designer", "owner", "votes", "comment_count", "created_at"];
+    const validOrder = ["asc", "desc"];
+
+    let queryText = `SELECT reviews.*, COUNT(reviews.review_id)::INT AS comment_count
     FROM reviews
-    LEFT JOIN comments ON reviews.review_id = comments.review_id
-    GROUP BY reviews.review_id
-    ORDER BY reviews.created_at DESC`).then((reviews) =>{
+    LEFT JOIN comments ON reviews.review_id = comments.review_id `
+
+    if(category){
+        queryText += 'WHERE category = $1 '
+        queryVals.push(category)
+    }
+    
+    queryText += `GROUP BY reviews.review_id `
+    
+    if(validSortBy.includes(sort_by)){
+        queryText += `ORDER BY ${sort_by} `
+    } else {
+        return Promise.reject({status : 400, msg : "Invalid sort query"})
+    }
+    
+    if(validOrder.includes(order)){
+        queryText += `${order} `
+    } else {
+        return Promise.reject({status : 400, msg : "Invalid order query"})
+    }
+    
+    return db.query(queryText, queryVals).then((reviews) =>{
+        if(reviews.rows.length === 0){
+            return Promise.reject({status : 404, msg : "Invalid query"})
+        }
         return reviews.rows;
     })
 }
