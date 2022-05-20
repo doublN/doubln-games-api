@@ -15,8 +15,12 @@ Doubl_n games is a REST API for a database of board game reviews, made up of rev
 5. Run `npm test` to run tests.
 
 ### Environment variables
-Add the `PGDATABASE` variable to the .env.development and .env.test files and assign to them the names of the development and test databases to be able to connect to the databases. e.g:
->`PGDATABASE=my_database`
+Add the `PGDATABASE` variable to the .env.development and .env.test files and assign to them the names of the development and test databases to be able to connect to the databases:
+> In .env.development:  
+>`PGDATABASE=nc_games`  
+
+>In .env.test:  
+>`PGADATABASE=nc_games_test`  
 
 ### Node.js and Postgres
 Node.js version 17.7.2 and above and Postgres version 14.2 and above are required to run this project.
