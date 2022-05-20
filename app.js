@@ -1,5 +1,5 @@
-const { application } = require("express");
 const express = require ("express");
+const apiRouter = require("./routes/api-router")
 
 const {
     getCategories,
@@ -21,13 +21,11 @@ const {
     deleteCommentByCommentId
 } = require("./controllers/comments");
 
-const { getEndpoints } = require("./controllers/api")
-
 const app = express();
 app.use(express.json());
 
 //api
-app.get("/api", getEndpoints)
+app.use("/api", apiRouter)
 
 //Categories
 app.get("/api/categories", getCategories);
