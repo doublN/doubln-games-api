@@ -152,19 +152,6 @@ describe("DELETE /api/comments/:comment_id", () =>{
         })
     })
 
-    // .delete("/api/treasures/1")
-    //   .expect(204)
-    //   .then(() => {
-    //     return db.query(`SELECT * FROM treasures`);
-    //   })
-    //   .then((treasures) => {
-    //     expect(treasures.rows).toHaveLength(25);
-    //     treasures.rows.forEach((treasure) => {
-    //       const expected = { treasure_id: 1 };
-    //       expect.not.objectContaining(expected);
-    //     });
-    //   });
-
     test("status: 404 when the comment_id doesn't exist", ()=>{
         return request(app)
         .delete("/api/comments/9999")
