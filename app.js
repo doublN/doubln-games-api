@@ -5,11 +5,6 @@ const {
     getCategories,
 } = require("./controllers/categories");
 
-const {
-    getReviews,
-    getReviewById,
-    patchReview,
-} = require("./controllers/reviews")
 
 const {
     getUsers,
@@ -29,11 +24,6 @@ app.use("/api", apiRouter)
 
 //Categories
 app.get("/api/categories", getCategories);
-
-//Reviews
-app.get("/api/reviews", getReviews)
-app.get("/api/reviews/:review_id", getReviewById);
-app.patch("/api/reviews/:review_id", patchReview);
 
 //Users
 app.get("/api/users", getUsers);
