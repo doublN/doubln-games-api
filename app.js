@@ -21,8 +21,13 @@ const {
     deleteCommentByCommentId
 } = require("./controllers/comments");
 
+const { getEndpoints } = require("./controllers/api")
+
 const app = express();
 app.use(express.json());
+
+//api
+app.get("/api", getEndpoints)
 
 //Categories
 app.get("/api/categories", getCategories);

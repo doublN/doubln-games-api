@@ -16,7 +16,11 @@
   },
   "GET /api/reviews": {
     "description": "serves an array of all reviews",
-    "queries": ["category", "sort_by", "order"],
+    "queries": [
+      "category",
+      "sort_by",
+      "order"
+    ],
     "exampleResponse": {
       "reviews": [
         {
@@ -27,6 +31,95 @@
           "category": "hidden-roles",
           "created_at": 1610964101251,
           "votes": 5
+        }
+      ]
+    }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves a single review",
+    "queries": [],
+    "exampleResponse": {
+      "review": [
+        {
+          "review_id": 1,
+          "title": "Agricola",
+          "review_body": "Farmyard fun!",
+          "designer": "Uwe Rosenberg",
+          "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          "votes": 1,
+          "category": "euro game",
+          "owner": "mallionaire",
+          "comment_count": 0
+        }
+      ]
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "Adds to the vote count of a review, serves the updated review",
+    "queries": [],
+    "exampleRequest": {
+      "inc_votes": 10
+    },
+    "exampleResponse": {
+      "review": [
+        {
+          "review_id": 2,
+          "title": "Jenga",
+          "review_body": "Fiddly fun for all the family",
+          "designer": "Leslie Scott",
+          "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          "votes": 10,
+          "category": "dexterity",
+          "owner": "philippaclaire9"
+        }
+      ]
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves an array of comments associated with a review",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "votes": 16,
+          "created_at": "Wed Nov 22 2017 12:43:33 GMT+0000",
+          "author": "bainesface",
+          "body": "I loved this game too!",
+          "review_id": 2
+        }
+      ]
+    }
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "Adds a new comment, serves the new comment",
+    "queries": [],
+    "exampleRequest": {
+      "username": "mallionaire",
+      "body": "Fantastic!"
+    },
+    "exampleResponse": {
+      "comment": [
+        {
+          "comment_id": 7,
+          "body": "Fantastic!",
+          "review_id": 3,
+          "author": "mallionaire",
+          "votes": 0,
+          "created_at": "Thu May 19 2022 16:11:35 GMT+0100"
+        }
+      ]
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "philippaclaire9",
+          "name": "philippa",
+          "avatar_url": "https://avatars2.githubusercontent.com/u/24604688?s=460&v=4"
         }
       ]
     }
