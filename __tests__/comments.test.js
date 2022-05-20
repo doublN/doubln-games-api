@@ -147,7 +147,7 @@ describe("DELETE /api/comments/:comment_id", () =>{
             const expected = {comment_id : 1}
             
             comments.rows.forEach((comment) =>{
-                expect(comment).not.objectContaining(expected);
+                expect.not.objectContaining(expected);
             })
         })
     })
@@ -161,7 +161,7 @@ describe("DELETE /api/comments/:comment_id", () =>{
         })
     })
 
-    test.only("status: 400 when the passed comment_id is of incorrect type", () =>{
+    test("status: 400 when the passed comment_id is of incorrect type", () =>{
         return request(app)
         .delete("/api/comments/eleventy")
         .expect(400)
