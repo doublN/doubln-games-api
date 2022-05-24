@@ -1,28 +1,11 @@
 const express = require ("express");
 const apiRouter = require("./routes/api-router")
 
-const {
-    getCategories,
-} = require("./controllers/categories");
-
-
-const {
-    getUsers,
-} = require("./controllers/users")
-
-
-
 const app = express();
 app.use(express.json());
 
 //api
 app.use("/api", apiRouter)
-
-//Categories
-app.get("/api/categories", getCategories);
-
-//Users
-app.get("/api/users", getUsers);
 
 //called if route is not found
 app.use("/*", (req, res, next) =>{
