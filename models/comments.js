@@ -39,3 +39,22 @@ exports.removeCommentByCommentId = (req) =>{
         }
     })
 }
+
+exports.updateCommentByCommentId = (req) =>{
+    if(!req.body.inc_votes){
+        return Promise.reject({status:400, msg:"Bad request: missing update property"})
+    }
+
+    return db.query(
+        `UPDATE comments
+        SET votes = votes + $1
+        WHERE comment_id = $2
+        RETURNING *`, [req.body.inc_votes, req.params.comment_id]
+    ).then((comment) =>{
+        if(comment.rows.length === 0){
+            return Promise.reject({status:404, msg:"comment id does not exist"})
+        } else {
+            return comment.rows[0];
+        }
+    })
+}

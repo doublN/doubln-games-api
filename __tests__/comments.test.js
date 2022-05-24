@@ -170,3 +170,96 @@ describe("DELETE /api/comments/:comment_id", () =>{
         })
     })
 })
+
+describe("PATCH /api/comments/:comment_id", () =>{
+    test("status: 200 responds with the correct comment object with the votes number correctly adjusted for a positive number", ()=>{
+        const updateObj = {
+            inc_votes : 5,
+        }
+
+        return request(app)
+        .patch("/api/comments/1")
+        .send(updateObj)
+        .expect(200)
+        .then(({body}) =>{
+            //match review coming in with equivalent from database
+            expect(body.comment).toMatchObject({
+                body: 'I loved this game too!',
+                votes: 21,
+                author: 'bainesface',
+                review_id: 2,
+            })
+            //test correct created_at date separately
+            expect(new Date(body.comment.created_at)).toEqual(new Date(1511354613389))
+        })
+    })
+
+    test("status: 200 responds with the correct comment object with the votes number correctly adjusted for a negative number", ()=>{
+        const updateObj = {
+            inc_votes : -5,
+        }
+
+        return request(app)
+        .patch("/api/comments/1")
+        .send(updateObj)
+        .expect(200)
+        .then(({body}) =>{
+            //match review coming in with equivalent from database
+            expect(body.comment.votes).toEqual(11)
+        })
+    })
+
+    test("status: 404 when passed a valid number but no comment existing for the id", ()=>{
+        const updateObj = {
+            inc_votes : 5,
+        }
+
+        return request(app)
+        .patch("/api/comments/9999")
+        .send(updateObj)
+        .expect(404)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("comment id does not exist")
+        })
+    })
+
+    test("status: 400 when passed an invalid id data type" , ()=>{
+        const updateObj = {
+            inc_votes : 5,
+        }
+
+        return request(app)
+        .patch("/api/comments/twentytwo")
+        .send(updateObj)
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: invalid data type")
+        })
+    })
+
+    test("status: 400 when passed an invalid id data type in the update object" , ()=>{
+        const updateObj = {
+            inc_votes : "five",
+        }
+
+        return request(app)
+        .patch("/api/comments/1")
+        .send(updateObj)
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: invalid data type")
+        })
+    })
+
+    test("status: 400 respond with an error message for missing inc_votes key", () =>{
+        const updateObj = {};
+
+        return request(app)
+        .patch("/api/comments/1")
+        .send(updateObj)
+        .expect(400)
+        .then(({body}) =>{
+            expect(body.msg).toEqual("Bad request: missing update property");
+        })
+    })
+})

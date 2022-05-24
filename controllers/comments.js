@@ -2,6 +2,7 @@ const {
     selectCommentsByReviewId, 
     addCommentByReviewId,
     removeCommentByCommentId,
+    updateCommentByCommentId,
 } = require("../models/comments")
 
 exports.getCommentsByReviewId = (req, res, next) =>{
@@ -23,6 +24,14 @@ exports.postCommentByReviewId = (req, res, next) =>{
 exports.deleteCommentByCommentId = (req, res, next) =>{
     removeCommentByCommentId(req).then(() =>{
         res.status(204).send();
+    }).catch((err) =>{
+        next(err);
+    })
+}
+
+exports.patchCommentByCommentId = (req, res, next) =>{
+    updateCommentByCommentId(req).then((comment) =>{
+        res.status(200).send({comment})
     }).catch((err) =>{
         next(err);
     })
