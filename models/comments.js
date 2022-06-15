@@ -9,13 +9,8 @@ exports.selectCommentsByReviewId = (req) =>{
             return Promise.all([selectJustReview(req), comments])
         }).then(([review, comments]) =>{
             //the review_id does exist
-            if(comments.rows.length === 0){
-                //no comments for that review_id
-                return Promise.reject({status : 200, msg : "No comments for that review"})
-            } else{
-                //return comments
-                return comments.rows;
-            }
+            //return comments
+            return comments.rows;
         })
 }
 
