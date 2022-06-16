@@ -21,6 +21,19 @@
       "sort_by",
       "order"
     ],
+    "valid sort_by": [
+      "title",
+      "category",
+      "designer",
+      "owner",
+      "votes",
+      "comment_count",
+      "created_at"
+    ],
+    "valid order": [
+      "asc",
+      "desc"
+    ],
     "exampleResponse": {
       "reviews": [
         {
